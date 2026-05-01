@@ -1,0 +1,148 @@
+.listings {
+  padding: 2rem 0;
+}
+
+.listings__filters {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 28px;
+}
+
+.listings__filter {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.listings__filter span {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.listings__filter select,
+.listings__filter input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-text);
+  outline: none;
+}
+
+.listings__filter select:focus,
+.listings__filter input:focus {
+  border-color: rgba(249, 115, 22, 0.75);
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
+}
+
+.listings__submit {
+  width: 100%;
+}
+
+.listings__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.listing-skeleton,
+.listings__empty {
+  border-radius: var(--radius-md);
+}
+
+.listing-skeleton {
+  padding: 1rem;
+}
+
+.listing-skeleton__image,
+.listing-skeleton__line,
+.listing-skeleton__meta {
+  background: linear-gradient(90deg, #ececec 25%, #f8f8f8 37%, #ececec 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 18px;
+}
+
+.listing-skeleton__image {
+  min-height: 230px;
+  margin-bottom: 1rem;
+}
+
+.listing-skeleton__line {
+  height: 14px;
+  margin-bottom: 0.8rem;
+}
+
+.listing-skeleton__line--sm {
+  width: 35%;
+}
+
+.listing-skeleton__line--lg {
+  width: 75%;
+}
+
+.listing-skeleton__meta {
+  height: 42px;
+  width: 100%;
+}
+
+.listings__empty {
+  display: grid;
+  place-items: center;
+  gap: 0.8rem;
+  padding: 2.4rem;
+  text-align: center;
+}
+
+.listings__empty h3,
+.listings__empty p {
+  margin: 0;
+}
+
+.listings__empty p {
+  color: var(--color-muted);
+  max-width: 480px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .listings__filters {
+    display: none;
+  }
+
+}
+
+@media (min-width: 700px) {
+  .listings__filters {
+    display: none;
+  }
+
+  .listings__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .listings__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1320px) {
+  .listings__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

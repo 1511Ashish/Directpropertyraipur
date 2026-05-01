@@ -1,0 +1,120 @@
+.property-card {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.property-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--shadow-card);
+}
+
+.property-card__media {
+  position: relative;
+  overflow: hidden;
+}
+
+.property-card__media img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 260ms ease;
+}
+
+.property-card:hover .property-card__media img {
+  transform: scale(1.04);
+}
+
+.property-card__tag {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.72);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.property-card__body {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.property-card__topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  /* gap: 1rem; */
+}
+
+.property-card__topline h3,
+.property-card__topline strong,
+.property-card__location {
+  margin: 0;
+}
+
+.property-card__topline h3 {
+  font-size: 1.15rem;
+}
+
+.property-card__topline strong {
+  color: var(--color-accent-dark);
+  white-space: nowrap;
+}
+
+.property-card__location {
+  color: var(--color-muted);
+}
+
+.property-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.property-card__meta span {
+  padding: 0.55rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.05);
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.property-card__button {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .property-card__title {
+    font-size: .95rem;
+    font-weight: bold;
+  }
+
+  .property-card__topline strong, .property-card__topline span {
+    font-size: .7rem;
+  }
+
+  .property-card__location {
+    font-size: .7rem;
+  }
+
+  .property-card__tag {
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .property-card__meta span {
+    padding: 0.2rem;
+    font-size: 0.6rem;
+  }
+
+  .property-card__button {
+    padding: 0.5rem;
+  }
+
+}
