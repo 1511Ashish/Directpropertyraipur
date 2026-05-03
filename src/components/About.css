@@ -1,5 +1,5 @@
 .about {
-  padding: 1rem 0 5rem;
+  /* padding: 1rem 0 5rem; */
 }
 
 .about__panel {
@@ -27,6 +27,10 @@
   gap: 1rem;
 }
 
+.about__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
 .about__columns h3,
 .about__columns p {
   margin: 0;
@@ -40,13 +44,13 @@
 .about__stats div {
   display: grid;
   gap: 0.25rem;
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.72);
 }
 
 .about__stats strong {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
 }
 
 .about__stats span {
@@ -67,6 +71,6 @@
   }
 
   .about__stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

@@ -6,11 +6,13 @@ function Footer() {
       <div className="section-shell footer__grid">
         <div>
           <a className="footer__brand" href="#home">
-            Direct Property
+            <img
+              src={"/directproperty.jpg"}
+              width={80}
+              style={{borderRadius: "50%"}}/>
           </a>
           <p>
-            Premium real estate advisory for buyers, sellers, and investors across
-            high-growth global markets.
+            Premium real estate advisory for buyers, sellers, and investors across the markets.
           </p>
         </div>
 
@@ -20,30 +22,29 @@ function Footer() {
           <a href="#listings">Listings</a>
           <a href="#about">About</a>
           <a href="#testimonials">Testimonials</a>
-        </div>
-
-        <div>
-          <h3>Categories</h3>
-          <a href="#listings">Apartments</a>
-          <a href="#listings">Villas</a>
-          <a href="#listings">Townhouses</a>
-          <a href="#listings">Investment Homes</a>
-        </div>
+        </div>        
 
         <div>
           <h3>Contact</h3>
           <a href="tel:+918224049845">8224049845</a>
           <a href="mailto:Directpropertyraipur@gmail.com">Directpropertyraipur@gmail.com</a>
           <span>Bhatagaon, Raipur (C.G)</span>
+        </div>
+
+        <div>
+           <h3>Social Links</h3>
           <div className="footer__socials">
             <a href="#contact" aria-label="Instagram">
-              IG
+              <img
+              src={"/instagram.png"}/>
             </a>
             <a href="#contact" aria-label="LinkedIn">
-              IN
+              <img
+              src={"/whatsapp.png"}/>
             </a>
             <a href="#contact" aria-label="Facebook">
-              FB
+              <img
+              src={"/facebook.png"}/>
             </a>
           </div>
         </div>

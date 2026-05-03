@@ -10,7 +10,7 @@
   color: #fff;
   background:
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.16), transparent 28%),
-    linear-gradient(135deg, #131313 0%, #292929 55%, #f97316 180%);
+    linear-gradient(135deg, var(--color-dark) 0%, var(--color-dark-soft) 58%, var(--color-accent-warm) 180%);
   box-shadow: var(--shadow-card);
 }
 

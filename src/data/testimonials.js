@@ -1,8 +1,8 @@
 export const testimonials = [
   {
     id: 1,
-    name: 'Ariana Cole',
-    role: 'International Investor',
+    name: 'Riya Makhija',
+    role: 'Realstate Investor',
     quote:
       'Direct Property made cross-border buying feel structured and effortless. Every recommendation was aligned with our budget and timeline.',
     image:
@@ -10,7 +10,7 @@ export const testimonials = [
   },
   {
     id: 2,
-    name: 'Marcus Hale',
+    name: 'Sandeep Agrawal',
     role: 'First-Time Buyer',
     quote:
       'The experience felt premium from the first call to the closing table. We found a home that exceeded expectations without wasting time.',
@@ -19,7 +19,7 @@ export const testimonials = [
   },
   {
     id: 3,
-    name: 'Lina Serrano',
+    name: 'Monica Tyagi',
     role: 'Property Seller',
     quote:
       'Their marketing, negotiation support, and buyer screening were sharp. The home sold faster than comparable listings in our area.',
