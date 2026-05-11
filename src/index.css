@@ -146,7 +146,7 @@ img {
 }
 
 .accent-button {
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-warm) 130%);
+  background: var(--color-accent);
   color: #fff;
   box-shadow: 0 14px 30px rgba(30, 91, 255, 0.22);
 }

@@ -1,24 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ApiPropertyCard from './ApiPropertyCard';
 import './ListingsGrid.css';
 import { Bath, BedDouble, Ruler } from 'lucide-react';
 
 function ListingsGrid({
   allPropertiesCount,
+  batchSize = 8,
+  copy,
+  eyebrow,
   error,
   filters,
+  homeHref = '#home',
   isLoading,
   onFilterChange,
+  onExploreMore,
+  onCloseProperty,
   onSearch,
+  onSelectProperty,
   properties,
   propertyTypes,
+  sectionId = 'listings',
   selectedProperty,
-  onSelectProperty,
-  onCloseProperty
+  showExploreMore = false,
+  title,
+  useInfiniteScroll = false
 }) {
   const showSelectedBeds = Number(selectedProperty?.beds) > 1;
   const showSelectedBaths = Number(selectedProperty?.baths) > 1;
   const hasFetchedProperties = allPropertiesCount > 0;
+  const [visibleCount, setVisibleCount] = useState(batchSize);
+  const loadMoreRef = useRef(null);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -51,15 +62,47 @@ function ListingsGrid({
     };
   }, [onCloseProperty, selectedProperty]);
 
+  useEffect(() => {
+    setVisibleCount(batchSize);
+  }, [batchSize, filters.query, filters.type, useInfiniteScroll]);
+
+  const visibleProperties = useMemo(() => {
+    if (!useInfiniteScroll) {
+      return properties;
+    }
+
+    return properties.slice(0, visibleCount);
+  }, [properties, useInfiniteScroll, visibleCount]);
+
+  const hasMoreProperties = useInfiniteScroll && visibleCount < properties.length;
+
+  useEffect(() => {
+    if (!hasMoreProperties || !loadMoreRef.current) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+
+        if (entry?.isIntersecting) {
+          setVisibleCount((current) => Math.min(current + batchSize, properties.length));
+        }
+      },
+      { rootMargin: '240px 0px' }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [batchSize, hasMoreProperties, properties.length]);
+
   return (
-    <section className="listings section-shell" id="listings">
+    <section className="listings section-shell" id={sectionId}>
       <div className="section-header">
-        <span className="eyebrow">Featured portfolio</span>
-        <h2 className="section-title">Homes selected for modern living and long-term value.</h2>
-        <p className="section-copy">
-          Explore standout residences, with transparent
-          pricing and details buyers care about most.
-        </p>
+        <span className="eyebrow">{eyebrow}</span>
+        <h2 className="section-title">{title}</h2>
+        {/* <p className="section-copy">{copy}</p> */}
       </div>
 
       <form className="inputSearch" onSubmit={handleSubmit}>
@@ -102,7 +145,7 @@ function ListingsGrid({
 
       {isLoading ? (
         <div className="listings__grid" aria-live="polite" aria-busy="true">
-          {Array.from({ length: 8 }).map((_, index) => (
+          {Array.from({ length: batchSize }).map((_, index) => (
             <div className="listing-skeleton glass-panel" key={index}>
               <div className="listing-skeleton__image" />
               <div className="listing-skeleton__line listing-skeleton__line--sm" />
@@ -113,15 +156,27 @@ function ListingsGrid({
           ))}
         </div>
       ) : properties.length > 0 ? (
-        <div className="listings__grid">
-          {properties.map((property) => (
+        <>
+          <div className="listings__grid">
+          {visibleProperties.map((property) => (
             <ApiPropertyCard
               key={property.id}
               property={property}
               onSelect={() => onSelectProperty(property)}
             />
           ))}
-        </div>
+          </div>
+
+          {showExploreMore ? (
+            <div className="listings__actions">
+              <button className="accent-button listings__action-button" type="button" onClick={onExploreMore}>
+                Explore More
+              </button>
+            </div>
+          ) : null}
+
+          {hasMoreProperties ? <div className="listings__sentinel" ref={loadMoreRef} aria-hidden="true" /> : null}
+        </>
       ) : hasFetchedProperties ? (
         <div className="listings__status glass-panel" role="status">
           <h3>No properties matched your search.</h3>
@@ -131,7 +186,7 @@ function ListingsGrid({
         <div className="listings__empty glass-panel" role="status">
           <h3>No properties are available right now.</h3>
           <p>Refresh shortly or contact Direct Property for the latest available listings.</p>
-          <a className="accent-button" href="#home">
+          <a className="accent-button" href={homeHref}>
             Back to Home
           </a>
         </div>

@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Navbar.css';
 
-const navLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'Listings', href: '#listings' },
-  { label: 'About', href: '#about' },
-  { label: 'Testimonials', href: '#testimonials' },
-  { label: 'Contact', href: '#contact' }
-];
-
-function Navbar() {
+function Navbar({ isPropertyPage, onNavigateHomeSection, onNavigateProperty }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
@@ -37,10 +29,26 @@ function Navbar() {
     setIsDrawerOpen(false);
   };
 
+  const navLinks = [
+    { label: 'Home', action: () => onNavigateHomeSection('home') },
+    { label: 'Property', action: onNavigateProperty },
+    { label: 'About', action: () => onNavigateHomeSection('about') },
+    { label: 'Testimonials', action: () => onNavigateHomeSection('testimonials') },
+    { label: 'Contact', action: () => onNavigateHomeSection('contact') }
+  ];
+
   return (
     <header className="navbar">
       <div className="section-shells navbar__inner glass-panel">
-        <a className="navbar__brand" href="#home">
+        <a
+          className="navbar__brand"
+          href={isPropertyPage ? '/' : '#home'}
+          onClick={(event) => {
+            event.preventDefault();
+            closeDrawer();
+            onNavigateHomeSection('home');
+          }}
+        >
           <img
           src={"/directproperty.jpg"}
           width={50}
@@ -74,7 +82,15 @@ function Navbar() {
             aria-label="Primary"
           >
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} onClick={closeDrawer}>
+              <a
+                key={link.label}
+                href={link.label === 'Property' ? '/property' : `#${link.label.toLowerCase()}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  closeDrawer();
+                  link.action();
+                }}
+              >
                 {link.label}
               </a>
             ))}

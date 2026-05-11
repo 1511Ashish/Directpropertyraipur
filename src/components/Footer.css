@@ -62,3 +62,32 @@
     grid-template-columns: 1.3fr repeat(3, 1fr);
   }
 }
+
+@media screen and (max-width: 768px) {
+  .footer__grid h3,  
+  .section-shell {
+    font-size: 0.9rem;
+  }
+
+  .footer__grid a, .footer__grid p {
+    font-size: 0.85rem;
+  }
+
+  .footer__contacts, .footer__header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .footer__grid img{
+    width: 120px;
+  }
+
+  .footer__socials img {
+    width: 30px;
+  }
+
+  .footer__socials {
+    margin-bottom: -1.5rem;
+  }
+}
