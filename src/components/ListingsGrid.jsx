@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ApiPropertyCard from './ApiPropertyCard';
 import './ListingsGrid.css';
-import { Bath, BedDouble, Ruler } from 'lucide-react';
+import { Bath, BedDouble, ChevronLeft, ChevronRight, Ruler } from 'lucide-react';
 
 function ListingsGrid({
   allPropertiesCount,
@@ -29,7 +29,14 @@ function ListingsGrid({
   const showSelectedBaths = Number(selectedProperty?.baths) > 1;
   const hasFetchedProperties = allPropertiesCount > 0;
   const [visibleCount, setVisibleCount] = useState(batchSize);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const loadMoreRef = useRef(null);
+  const selectedImages = selectedProperty?.images?.length
+    ? selectedProperty.images
+    : selectedProperty?.image
+      ? [selectedProperty.image]
+      : [];
+  const hasMultipleSelectedImages = selectedImages.length > 1;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -65,6 +72,22 @@ function ListingsGrid({
   useEffect(() => {
     setVisibleCount(batchSize);
   }, [batchSize, filters.query, filters.type, useInfiniteScroll]);
+
+  useEffect(() => {
+    setSelectedImageIndex(0);
+  }, [selectedProperty?.id]);
+
+  useEffect(() => {
+    if (!hasMultipleSelectedImages) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setSelectedImageIndex((current) => (current + 1) % selectedImages.length);
+    }, 3500);
+
+    return () => window.clearInterval(timer);
+  }, [hasMultipleSelectedImages, selectedImages.length]);
 
   const visibleProperties = useMemo(() => {
     if (!useInfiniteScroll) {
@@ -212,15 +235,63 @@ function ListingsGrid({
             </button>
 
             <div className="property-modal__media">
-              <img
-                src={selectedProperty.image}
-                alt={selectedProperty.imageAlt}
-                loading="lazy"
-                onError={(event) => {
-                  event.currentTarget.src =
-                    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
-                }}
-              />
+              <div
+                className="property-modal__slider"
+                style={{ transform: `translateX(-${selectedImageIndex * 100}%)` }}
+              >
+                {selectedImages.map((image, index) => (
+                  <img
+                    src={image}
+                    alt={`${selectedProperty.imageAlt} ${index + 1}`}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    key={`${image}-${index}`}
+                    onError={(event) => {
+                      event.currentTarget.src =
+                        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
+                    }}
+                  />
+                ))}
+              </div>
+
+              {hasMultipleSelectedImages ? (
+                <>
+                  <button
+                    className="property-modal__nav property-modal__nav--prev"
+                    type="button"
+                    aria-label="Previous property image"
+                    onClick={() =>
+                      setSelectedImageIndex((current) =>
+                        current === 0 ? selectedImages.length - 1 : current - 1
+                      )
+                    }
+                  >
+                    <ChevronLeft size={22} strokeWidth={2.4} />
+                  </button>
+                  <button
+                    className="property-modal__nav property-modal__nav--next"
+                    type="button"
+                    aria-label="Next property image"
+                    onClick={() =>
+                      setSelectedImageIndex((current) => (current + 1) % selectedImages.length)
+                    }
+                  >
+                    <ChevronRight size={22} strokeWidth={2.4} />
+                  </button>
+                  <div className="property-modal__dots" aria-label="Property images">
+                    {selectedImages.map((image, index) => (
+                      <button
+                        className={`property-modal__dot ${
+                          selectedImageIndex === index ? 'is-active' : ''
+                        }`}
+                        key={`${image}-${index}`}
+                        type="button"
+                        aria-label={`Show property image ${index + 1}`}
+                        onClick={() => setSelectedImageIndex(index)}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : null}
             </div>
 
             <div className="property-modal__content">

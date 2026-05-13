@@ -17,6 +17,7 @@ const defaultFilters = {
 };
 
 const API_URL = 'https://directpropertybackend.onrender.com/api/v1/properties';
+const API_PAGE_SIZE = 1000;
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
 
@@ -98,31 +99,41 @@ const buildLocation = (item) => {
   return parts.join(', ');
 };
 
-const getImage = (item) => {
+const getImages = (item) => {
   const imageSets = [item.images, item.propertyImages, item.gallery, item.photos];
+  const images = [];
+  const addImage = (value) => {
+    if (typeof value === 'string' && value.trim() && !images.includes(value.trim())) {
+      images.push(value.trim());
+    }
+  };
 
   for (const set of imageSets) {
     if (Array.isArray(set)) {
       for (const entry of set) {
-        if (typeof entry === 'string' && entry.trim()) {
-          return entry;
-        }
+        addImage(entry);
 
         if (entry && typeof entry === 'object') {
           const candidate = entry.url || entry.src || entry.image;
-
-          if (typeof candidate === 'string' && candidate.trim()) {
-            return candidate;
-          }
+          addImage(candidate);
         }
       }
     }
   }
 
-  const directImage =
-    item.image || item.imageUrl || item.thumbnail || item.featuredImage || item.coverImage;
+  [
+    item.image,
+    item.imageUrl,
+    item.thumbnail,
+    item.featuredImage,
+    item.coverImage
+  ].forEach(addImage);
 
-  return typeof directImage === 'string' && directImage.trim() ? directImage : FALLBACK_IMAGE;
+  return images.length > 0 ? images : [FALLBACK_IMAGE];
+};
+
+const getImage = (item) => {
+  return getImages(item)[0];
 };
 
 const getText = (...values) => {
@@ -208,6 +219,7 @@ const normalizeProperty = (item, index) => {
     location,
     description,
     image: getImage(item),
+    images: getImages(item),
     imageAlt: `${title} image`,
     tag: formatLabel(listingKind || 'Available', 'Available'),
     price:
@@ -252,6 +264,86 @@ const extractProperties = (payload) => {
   return [];
 };
 
+const getPaginationInfo = (payload) => {
+  const sources = [
+    payload,
+    payload?.data,
+    payload?.meta,
+    payload?.pagination,
+    payload?.data?.meta,
+    payload?.data?.pagination
+  ].filter(Boolean);
+
+  for (const source of sources) {
+    const totalPages = getNumber(source.totalPages, source.pages, source.pageCount, source.total_pages);
+    const totalItems = getNumber(source.total, source.totalItems, source.totalCount, source.count);
+    const currentPage = getNumber(source.page, source.currentPage, source.current_page);
+    const limit = getNumber(source.limit, source.pageSize, source.perPage, source.size);
+
+    if (totalPages || totalItems || currentPage || limit) {
+      return {
+        currentPage: currentPage || 1,
+        limit,
+        totalItems,
+        totalPages
+      };
+    }
+  }
+
+  return null;
+};
+
+const buildPropertiesUrl = (page = 1) => {
+  const url = new URL(API_URL);
+  url.searchParams.set('page', String(page));
+  url.searchParams.set('limit', String(API_PAGE_SIZE));
+  url.searchParams.set('size', String(API_PAGE_SIZE));
+
+  return url.toString();
+};
+
+const fetchPropertiesPage = async (page, signal) => {
+  const response = await fetch(buildPropertiesUrl(page), { signal });
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+
+  const payload = await response.json();
+
+  return {
+    items: extractProperties(payload),
+    pagination: getPaginationInfo(payload)
+  };
+};
+
+const fetchAllProperties = async (signal) => {
+  const firstPage = await fetchPropertiesPage(1, signal);
+  const pagination = firstPage.pagination;
+  const totalPages =
+    pagination?.totalPages ||
+    (pagination?.totalItems && firstPage.items.length
+      ? Math.ceil(pagination.totalItems / (pagination.limit || firstPage.items.length))
+      : 0);
+
+  if (!totalPages || totalPages <= 1) {
+    return firstPage.items;
+  }
+
+  const remainingPages = [];
+
+  for (let page = 2; page <= totalPages; page += 1) {
+    remainingPages.push(fetchPropertiesPage(page, signal));
+  }
+
+  const remainingResults = await Promise.all(remainingPages);
+
+  return [
+    ...firstPage.items,
+    ...remainingResults.flatMap((result) => result.items)
+  ];
+};
+
 function App() {
   const getPathname = () => window.location.pathname.replace(/\/+$/, '') || HOME_PATH;
   const [filters, setFilters] = useState(defaultFilters);
@@ -270,14 +362,7 @@ function App() {
       setError('');
 
       try {
-        const response = await fetch(API_URL, { signal: controller.signal });
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status ${response.status}`);
-        }
-
-        const payload = await response.json();
-        const items = extractProperties(payload)
+        const items = (await fetchAllProperties(controller.signal))
           .filter(isAvailableProperty)
           .map(normalizeProperty)
           .filter(Boolean)
@@ -441,16 +526,16 @@ function App() {
           }
           copy={
             isPropertyPage
-              ? 'Browse every available listing. The first 8 load immediately, and more appear as you scroll.'
+              ? 'Browse every available listing from the property feed.'
               : 'Explore standout residences, with transparent pricing and details buyers care about most.'
           }
           eyebrow={isPropertyPage ? 'Available properties' : 'Featured portfolio'}
-          useInfiniteScroll={isPropertyPage}
+          useInfiniteScroll={false}
         />
         {!isPropertyPage ? (
           <>
             <About stats={stats} />
-            <Testimonials />
+            {/* <Testimonials /> */}
             <CTASection />
           </>
         ) : null}

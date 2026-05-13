@@ -33,7 +33,7 @@ function Navbar({ isPropertyPage, onNavigateHomeSection, onNavigateProperty }) {
     { label: 'Home', action: () => onNavigateHomeSection('home') },
     { label: 'Property', action: onNavigateProperty },
     { label: 'About', action: () => onNavigateHomeSection('about') },
-    { label: 'Testimonials', action: () => onNavigateHomeSection('testimonials') },
+    // { label: 'Testimonials', action: () => onNavigateHomeSection('testimonials') },
     { label: 'Contact', action: () => onNavigateHomeSection('contact') }
   ];
 

@@ -20,6 +20,14 @@ function MetaIcon({ children }) {
   );
 }
 
+const truncateCardText = (value, maxLength = 30) => {
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  return value.length > maxLength ? `${value.slice(0, maxLength)}...` : value;
+};
+
 function ApiPropertyCard({ property, onSelect }) {
   const handleImageError = (event) => {
     event.currentTarget.src = FALLBACK_IMAGE;
@@ -55,15 +63,17 @@ function ApiPropertyCard({ property, onSelect }) {
         <div className="property-card__topline">
           <div className="property-card__metatop">
             <span>
-              {property.category}
+              {truncateCardText(property.category)}
             </span>
           </div>
           <strong>{property.price}</strong>
         </div>
         <div title={property.title} className="property-card__title">
-          {property.title}
+          {truncateCardText(property.title)}
         </div>
-        <div className="property-card__location">{property.location}</div>
+        <div title={property.location} className="property-card__location">
+          {truncateCardText(property.location)}
+        </div>
         </div>
 
         <div className="property-card__body">
@@ -101,7 +111,7 @@ function ApiPropertyCard({ property, onSelect }) {
               <path d="M5 9v6" />
               <path d="M19 9v6" />
             </MetaIcon>
-            {property.area}
+            {truncateCardText(property.area)}
           </span>
         </div>
 

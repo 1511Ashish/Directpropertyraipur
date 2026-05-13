@@ -13,7 +13,7 @@
   --shadow-soft: 0 20px 50px rgba(18, 60, 170, 0.1);
   --shadow-card: 0 24px 50px rgba(16, 33, 61, 0.12);
   --radius-lg: 32px;
-  --radius-md: 24px;
+  --radius-md: 16px;
   --radius-sm: 18px;
   font-family: 'Manrope', sans-serif;
   color: var(--color-text);
@@ -143,6 +143,10 @@ img {
   font-size: 0.75rem;
   transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
 } 
+
+.accent-button {
+  padding: 0.6rem 0.7rem;
+}
 }
 
 .accent-button {
@@ -201,4 +205,8 @@ img {
 /* Hide scrollbar for Chrome, Safari and Opera */
 *::-webkit-scrollbar {
   display: none;
+}
+
+* {
+  user-select: none;
 }

@@ -206,27 +206,95 @@
   width: min(980px, 100%);
   max-height: min(88vh, 760px);
   overflow: hidden;
+  user-select: none;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: var(--shadow-card);
 }
 
 .property-modal__media {
+  position: relative;
+  height: min(88vh, 760px);
   min-height: 320px;
   background: #ececec;
+  overflow: hidden;
 }
 
-.property-modal__media img {
+.property-modal__slider {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 520ms ease;
+  will-change: transform;
+}
+
+.property-modal__slider img {
+  flex: 0 0 100%;
+  min-width: 100%;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.property-modal__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.72);
+  color: #fff;
+  transform: translateY(-50%);
+}
+
+.property-modal__nav--prev {
+  left: 0.85rem;
+}
+
+.property-modal__nav--next {
+  right: 0.85rem;
+}
+
+.property-modal__dots {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.property-modal__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: 0 0 0 1px rgba(17, 17, 17, 0.12);
+}
+
+.property-modal__dot.is-active {
+  width: 24px;
+  background: #fff;
 }
 
 .property-modal__content {
   display: grid;
   align-content: start;
   gap: 1rem;
-  padding: 2rem;
+  max-height: min(88vh, 760px);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.property-modal__content::-webkit-scrollbar {
+  display: none;
 }
 
 .property-modal__tag {
@@ -322,9 +390,25 @@
     grid-template-columns: minmax(0, 1fr);
     width: min(100%, 420px);
     max-height: 92vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .property-modal__card::-webkit-scrollbar {
+    display: none;
+  }
+
+  .property-modal__media {
+    height: auto;
+    min-height: 260px;
+    max-height: 38vh;
   }
 
   .property-modal__content {
+    max-height: none;
+    overflow: visible;
     padding: 1.25rem;
   }
 }
