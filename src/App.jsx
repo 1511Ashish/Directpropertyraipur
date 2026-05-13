@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 
 const HOME_PATH = '/';
 const PROPERTY_PATH = '/property';
+const PROPERTY_ALIASES = new Set([PROPERTY_PATH, '/property']);
 const LISTINGS_BATCH_SIZE = 8;
 
 const defaultFilters = {
@@ -345,7 +346,13 @@ const fetchAllProperties = async (signal) => {
 };
 
 function App() {
-  const getPathname = () => window.location.pathname.replace(/\/+$/, '') || HOME_PATH;
+  const normalizePathname = (path) => {
+    const pathname = path.replace(/\/+$/, '') || HOME_PATH;
+
+    return PROPERTY_ALIASES.has(pathname) ? PROPERTY_PATH : pathname;
+  };
+
+  const getPathname = () => normalizePathname(window.location.pathname);
   const [filters, setFilters] = useState(defaultFilters);
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -462,9 +469,11 @@ function App() {
   };
 
   const navigateToPath = (nextPath) => {
-    if (getPathname() !== nextPath) {
-      window.history.pushState({}, '', nextPath);
-      setPathname(nextPath);
+    const normalizedPath = normalizePathname(nextPath);
+
+    if (getPathname() !== normalizedPath) {
+      window.history.pushState({}, '', normalizedPath);
+      setPathname(normalizedPath);
     }
 
     setSelectedProperty(null);
