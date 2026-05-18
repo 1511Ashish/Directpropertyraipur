@@ -332,6 +332,35 @@
   line-height: 1.7;
 }
 
+.property-modal__details {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.property-modal__detail {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.property-modal__detail-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.property-modal__detail-label svg {
+  color: var(--color-accent-dark);
+}
+
+.property-modal__detail p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
 .property-modal__meta {
   display: flex;
   flex-wrap: wrap;
