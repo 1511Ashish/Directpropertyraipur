@@ -552,7 +552,7 @@ function ListingsGrid({
                   ))}
                 </div>
               ) : null}
-
+              {/* updated cards */}
               {selectedDetailItems.length > 0 ? (
                 <div className="property-modal__details">
                   {selectedDetailItems.map(({ icon: Icon, label, value }) => (
