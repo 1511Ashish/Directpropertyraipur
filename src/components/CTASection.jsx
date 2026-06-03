@@ -19,7 +19,7 @@ function CTASection() {
           </a>
           <a
             className="ghost-button"
-            href="https://wa.me/message/ZOZNCZ7X575QN1"
+            href="https://wa.me/+918224049845"
           >
             <img src={"/whatsapp.png"} width="28" height="28" />
             Whatsapp

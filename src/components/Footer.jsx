@@ -52,7 +52,7 @@ function Footer({ onNavigateHomeSection, onNavigateProperty, isPropertyPage }) {
               <img
               src={"/instagram.png"}/>
             </a>
-            <a href="https://wa.me/message/ZOZNCZ7X575QN1" aria-label="LinkedIn">
+            <a href="https://wa.me/+918224049845" aria-label="LinkedIn">
               <img
               src={"/whatsapp.png"}/>
             </a>
